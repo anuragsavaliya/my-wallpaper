@@ -27,6 +27,9 @@ const userRoute = require("./src/user/userroute");
 app.use("/user", userRoute);
 
 
+const toggleLikeRoute = require("./src/like/toggleLikeRoute");
+app.use("/toggleLike", toggleLikeRoute);
+
 app.use((req ,res ,next) =>{
     const error =new Error('Not Found');
     error.stats(404)

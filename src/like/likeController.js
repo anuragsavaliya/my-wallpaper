@@ -16,7 +16,7 @@ exports.store= async(req,res)=>{
 
             await LikeModel.findOneAndDelete({photoId:req.body.photo_id,userId:req.body.user_id});
 
-            await PhotoModel.update({_id:req.body.photo_id},{$inc:{isLike:-1}});
+            await PhotoModel.update({_id:req.body.photo_id},{$inc:{likes:-1}});
             return res.status(200).json({
                 status: true,
                 message: "UnLike Successfully",
@@ -30,7 +30,7 @@ like.photoId=req.body.photo_id;
 
 await like.save();
 
-await PhotoModel.update({_id:req.body.photo_id},{$inc:{isLike:1}});
+await PhotoModel.update({_id:req.body.photo_id},{$inc:{likes:1}});
 return res.status(200).json({
     status: true,
     message: "Like Successfully",

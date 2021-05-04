@@ -8,10 +8,15 @@ const upload = multer({
     storage
 })
 
-router.get("/", photoController.index);
+router.get("/getphotos", photoController.index);
 
 
-router.post("/",upload.single("image"), photoController.store);
+router.delete   ("/deletephoto", photoController.delete);
+
+router.get("/getphotosbyCategory", photoController.getPhotoByCategory);
+
+
+router.post("/add",upload.single("image"), photoController.store);
 
 
 module.exports = router;

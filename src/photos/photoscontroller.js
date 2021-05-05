@@ -57,8 +57,29 @@ exports.store = async (req, res, next) => {
   exports.index =async(req,res)=>{
       try{
 
+        const authKey=req.headers.authorization;
+        if(!authKey){
+        return res.status(422).json({
+          status: false,
+          message: "Oops ! Enter Auth key first",
+        });
+      }else{
+        console.log(authKey);
+        if(authKey.toString()!=="ANURAG")
+        return res.status(422).json({
+          status: false,
+          message: "Oops ! Auth key NOT VALID",
+        });
+    }
+        
         const user = await User.findById(req.query.user_id);
+const start=req.query.start?req.query.start:0;
+const limit=req.query.limit?req.query.limit:5;
+console.log(start);
+console.log(limit);
 
+
+        
         if (req.query.user_id) {
           if (!user)
             return res.status(422).json({
@@ -66,41 +87,42 @@ exports.store = async (req, res, next) => {
               message: "Oops ! user does not Exist",
             });
         }
+ 
+          const photoData=await PhotoModel.find()
+          .skip(parseInt(start)).limit(parseInt(limit))
+          .populate("category")
+          .sort({ createdAt: -1 })
 
-          const photo=await PhotoModel.find()
-          .populate("Category")
-          .sort({ createdAt: -1 });
 
 
-
-          if(!photo){
+          if(!photoData){
               throw new Error();
           }
 
 
-          // const data = []
-          // for (var i = 0; i < photo.length; i++) {
-          //   const photo_ = {
-          //     _id: photo[i]._id,
-          //     isLiked: false
-          //   }
+          const data = []
+          for (var i = 0; i < photoData.length; i++) {
+            const photo_ = {
+              _id: photoData[i]._id,
+              likes: photoData[i].likes,
+              name:photoData[i].name,
+              image:photoData[i].image,
+              categoryName:photoData[i].category.name,
+              categoryId:photoData[i].category._id,
+              isLiked: false
+            }
         
-          //   data.push(photo_)
-          // }
+            data.push(photo_)
+          }
 
 
           const likes = await Likes.find();
-          console.log(" likess "+likes);
-          console.log(" photods "+photo);
-console.log(req.query.user_id);
-          for (var i = 0; i < photo.length; i++) {
-            debugger;
-            await likes.map((like) => {
-
-
-              if ( photo[i]._id === like.photoId) {
         
-                return photo[i].isLiked = true;
+          for (var i = 0; i < data.length; i++) {
+            await likes.map((like) => {
+             
+              if ( data[i]._id.toString() == like.photoId.toString()) {
+                return data[i].isLiked = true;
               }
         
             });
@@ -109,7 +131,7 @@ console.log(req.query.user_id);
 
           return  res
           .status(200)
-          .json({ status: 200, message: "Success", data: photo });
+          .json({ status: 200, message: "Success", data: data });
 
        } catch (error) {
     console.log(error);

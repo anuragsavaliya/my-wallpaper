@@ -1,22 +1,22 @@
 const http = require('http')
 const express = require('express')
-const mongoose =require('mongoose')
+const mongoose = require('mongoose')
 
 
 const app = express();
-const port =process.env.PORT || 3000
+const port = process.env.PORT || 3000
 const server = http.createServer(app);
 server.listen(port);
-console.log("connected "+port)
+console.log("connected " + port)
 
-const bodyParser =require('body-parser')
+const bodyParser = require('body-parser')
 
-mongoose.connect('mongodb+srv://Anurag:anurag@cluster0.pa0er.mongodb.net/wallpaperapp',{
-    useNewUrlParser: true, useUnifiedTopology: true,
-  })
-  app.use(bodyParser.urlencoded({extended: false}))
-  app.use(bodyParser.json())
-  
+mongoose.connect('mongodb+srv://Anurag:anurag@cluster0.pa0er.mongodb.net/wallpaperapp', {
+  useNewUrlParser: true, useUnifiedTopology: true,
+})
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+
 const categoryRoute = require("./src/category/categoryroute");
 app.use("/category", categoryRoute);
 
@@ -30,8 +30,13 @@ app.use("/user", userRoute);
 const toggleLikeRoute = require("./src/like/toggleLikeRoute");
 app.use("/toggleLike", toggleLikeRoute);
 
-app.use((req ,res ,next) =>{
-    const error =new Error('Not Found');
-    error.stats(404)
-    next(error)
+
+const PhotoCompRoute = require("./src/PhotoComp/PhotoCompRoute");
+app.use("/photocomp", PhotoCompRoute);
+
+
+app.use((req, res, next) => {
+  const error = new Error('Not Found');
+  error.stats(404)
+  next(error)
 })

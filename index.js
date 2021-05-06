@@ -37,6 +37,6 @@ app.use("/photocomp", PhotoCompRoute);
 
 app.use((req, res, next) => {
   const error = new Error('Not Found');
-  error.stats(404)
+  res.status(404)
   next(error)
 })

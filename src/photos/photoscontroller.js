@@ -55,6 +55,104 @@ exports.store = async (req, res, next) => {
 };
 
 
+exports.search = async (req, res) => {
+  try {
+
+    const authKey = req.headers.authorization;
+    if (!authKey) {
+      return res.status(422).json({
+        status: false,
+        message: "Oops ! Enter Auth key first",
+      });
+    } else {
+      console.log(authKey);
+      if (authKey.toString() !== "ANURAG")
+        return res.status(422).json({
+          status: false,
+          message: "Oops ! Auth key NOT VALID",
+        });
+    }
+    if (!req.query.keyword)
+    return res
+      .status(200)
+      .json({ status: false, message: "Oops ! keyword is required !" });
+
+
+    const user = await User.findById(req.query.user_id);
+    const start = req.query.start ? req.query.start : 0;
+    const limit = req.query.limit ? req.query.limit : 5;
+    console.log(start);
+    console.log(limit);
+
+
+
+  //  var query = { name: req.query.keyword };
+    var query = { name:/^S/ };
+
+    const photoData = await PhotoModel.find()
+      .skip(parseInt(start)).limit(parseInt(limit))
+      .populate( 'category', null, { name: { $in: ['anu', 'politics'] },coin: { $in: ['50']} } )
+     // .where('name').in(['FirstCat'])
+      .sort({ createdAt: -1 })
+
+
+      // let result = (await PhotoModel.lookup({
+      //   path: 'tags',
+      //   query: { 'tagName': { '$in': [ 'funny', 'politics' ] } }
+      // })).pop();
+      // log(result);
+
+
+    if (!photoData) {
+      throw new Error();
+    }
+
+
+    // const data = []
+    // for (var i = 0; i < photoData.length; i++) {
+    //   const photo_ = {
+    //     _id: photoData[i]._id,
+    //     likes: photoData[i].likes,
+    //     name: photoData[i].name,
+    //     image: photoData[i].image,
+    //     categoryName: photoData[i].category.name,
+    //     categoryId: photoData[i].category._id,
+    //     isLiked: false
+    //   }
+
+    //   data.push(photo_)
+    // }
+
+
+  
+//     const finelData = []
+
+//     for (var i = 0; i < data.length; i++) {
+   
+
+//         if (data[i].categoryName.toString().includes(req.query.keyword)) {
+// finelData.push(data[i]);
+
+//         }
+
+    
+//     }
+
+
+
+    return res
+      .status(200)
+      .json({ status: 200, message: "Success", data: photoData });
+
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(error.status || 500)
+      .json({ error: error.errors || error.message || "Server Error" });
+  }
+};
+
+
 exports.index = async (req, res) => {
   try {
 

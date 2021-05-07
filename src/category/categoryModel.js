@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const requestSchema = new Schema(
   {
     name: { type: String, require: true },
+    coin: { type: String, require: true },
   },
   {
     timestamps: true,

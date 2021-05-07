@@ -14,6 +14,7 @@ router.get("/getphotos", photoController.index);
 router.delete   ("/deletephoto", photoController.delete);
 
 router.get("/getphotosbyCategory", photoController.getPhotoByCategory);
+router.get("/search", photoController.search);
 
 
 router.post("/add",upload.single("image"), photoController.store);

@@ -15,6 +15,7 @@ exports.store = async (req, res, next) => {
   
       const category = new Category();
       category.name = req.body.name;
+      category.coin = req.body.coin;
   
       await category.save((error, category) => {
         if (error) return res.status(400).json({ status: false, error });

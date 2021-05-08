@@ -1,6 +1,6 @@
 const PhotoCompModel = require("./PhotoCompModel");
 const sharp = require('sharp');
-const mergeImages = require('merge-images');
+//const mergeImages = require('merge-images');
 var sizeOf = require('image-size');
 var images = require("images");
 const fs = require("fs");
@@ -34,9 +34,9 @@ exports.store = async (req, res, next) => {
         var Jimp = require('jimp');
 
 
-        var w =  dimensions.width;
-        var h =  dimensions.height;
-        console.log(" image size     "+w+"  "+h);
+        var w = dimensions.width;
+        var h = dimensions.height;
+        console.log(" image size     " + w + "  " + h);
         //User-Defined Function to read the images
         async function main() {
             const image1 = await Jimp.read
@@ -59,10 +59,10 @@ exports.store = async (req, res, next) => {
         //     .overlayWith(req.files.Image2[0].path, { gravity: sharp.gravity.southeast })
         //     .toFile(path + 'output1.png');
 
-        let originalImage ='blit1.png';
+        let originalImage = 'blit1.png';
         let outputImage2 = 'croppedImage2.jpg';
 
-        
+
 
 
 
@@ -72,16 +72,16 @@ exports.store = async (req, res, next) => {
 
 
         sharp(originalImage)
-     //   .extract({ width: w, height: h, left: 0, top: 0 })
-      //  .resize(w, h)
-        .extract({ width: w, height: h, left: 0, top: 0 })
-        .toFile(outputImage)
-    .then(function(new_file_info) {
-        console.log("Image cropped and saved");
-    })
-    .catch(function(err) {
-        console.log("An error occured"+err);
-    });
+            //   .extract({ width: w, height: h, left: 0, top: 0 })
+            //  .resize(w, h)
+            .extract({ width: w, height: h, left: 0, top: 0 })
+            .toFile(outputImage)
+            .then(function (new_file_info) {
+                console.log("Image cropped and saved");
+            })
+            .catch(function (err) {
+                console.log("An error occured" + err);
+            });
 
 
         await photo.save((error, photo) => {

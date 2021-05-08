@@ -58,49 +58,42 @@ exports.store = async (req, res, next) => {
 exports.search = async (req, res) => {
   try {
 
-    const authKey = req.headers.authorization;
-    if (!authKey) {
-      return res.status(422).json({
-        status: false,
-        message: "Oops ! Enter Auth key first",
-      });
-    } else {
-      console.log(authKey);
-      if (authKey.toString() !== "ANURAG")
-        return res.status(422).json({
-          status: false,
-          message: "Oops ! Auth key NOT VALID",
-        });
-    }
+
     if (!req.query.keyword)
-    return res
-      .status(200)
-      .json({ status: false, message: "Oops ! keyword is required !" });
-
-
-    const user = await User.findById(req.query.user_id);
-    const start = req.query.start ? req.query.start : 0;
-    const limit = req.query.limit ? req.query.limit : 5;
-    console.log(start);
-    console.log(limit);
+      return res
+        .status(200)
+        .json({ status: false, message: "Oops ! keyword is required !" });
 
 
 
-  //  var query = { name: req.query.keyword };
-    var query = { name:/^S/ };
+    const query = { $text: { $search: "trek" } };
+    const projection = {
+      _id: 0,
+      name: 1,
+    };
 
-    const photoData = await PhotoModel.find()
-      .skip(parseInt(start)).limit(parseInt(limit))
-      .populate( 'category', null, { name: { $in: ['anu', 'politics'] },coin: { $in: ['50']} } )
-     // .where('name').in(['FirstCat'])
-      .sort({ createdAt: -1 })
+    //  var query = { name: req.query.keyword };
+    // var query = { name: /^S/ };
+
+    //  const photoData = await PhotoModel.find()
+    // .populate( 'category', null, { name: { $in: ['anu', 'politics'] },coin: { $in: ['50']} } )
+    // .where('name').in(['FirstCat'])
+    //     .sort({ createdAt: -1 })
+
+    //  const cursor = PhotoModel.find(query);
+    // for await (const doc of cursor) {
+    //   console.log(doc);
+    // }
 
 
-      // let result = (await PhotoModel.lookup({
-      //   path: 'tags',
-      //   query: { 'tagName': { '$in': [ 'funny', 'politics' ] } }
-      // })).pop();
-      // log(result);
+    adSchema.index({ name: 'text' });
+    const Ad = PhotoModel.model('PhotoModel', adSchema);
+    Ad.createIndexes();
+    // let result = (await PhotoModel.lookup({
+    //   path: 'tags',
+    //   query: { 'tagName': { '$in': [ 'funny', 'politics' ] } }
+    // })).pop();
+    // log(result);
 
 
     if (!photoData) {
@@ -124,25 +117,25 @@ exports.search = async (req, res) => {
     // }
 
 
-  
-//     const finelData = []
 
-//     for (var i = 0; i < data.length; i++) {
-   
+    //     const finelData = []
 
-//         if (data[i].categoryName.toString().includes(req.query.keyword)) {
-// finelData.push(data[i]);
+    //     for (var i = 0; i < data.length; i++) {
 
-//         }
 
-    
-//     }
+    //         if (data[i].categoryName.toString().includes(req.query.keyword)) {
+    // finelData.push(data[i]);
+
+    //         }
+
+
+    //     }
 
 
 
     return res
       .status(200)
-      .json({ status: 200, message: "Success", data: photoData });
+      .json({ status: 200, message: "Success", data: Ad });
 
   } catch (error) {
     console.log(error);

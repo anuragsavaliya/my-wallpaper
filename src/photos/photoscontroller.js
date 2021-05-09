@@ -75,20 +75,22 @@ exports.search = async (req, res) => {
     //  var query = { name: req.query.keyword };
     // var query = { name: /^S/ };
 
-    //  const photoData = await PhotoModel.find()
-    // .populate( 'category', null, { name: { $in: ['anu', 'politics'] },coin: { $in: ['50']} } )
-    // .where('name').in(['FirstCat'])
-    //     .sort({ createdAt: -1 })
 
+    const photoData = await PhotoModel.find()
+      .populate('category')
+      .sort({ createdAt: -1 })
+    //  photoData.index({ name: 'text' });
+
+    // photoData.index()
     //  const cursor = PhotoModel.find(query);
     // for await (const doc of cursor) {
     //   console.log(doc);
     // }
 
 
-    adSchema.index({ name: 'text' });
-    const Ad = PhotoModel.model('PhotoModel', adSchema);
-    Ad.createIndexes();
+    // adSchema.index({ name: 'text' });
+    // const Ad = PhotoModel.model('PhotoModel', adSchema);
+    // Ad.createIndexes();
     // let result = (await PhotoModel.lookup({
     //   path: 'tags',
     //   query: { 'tagName': { '$in': [ 'funny', 'politics' ] } }
@@ -135,7 +137,7 @@ exports.search = async (req, res) => {
 
     return res
       .status(200)
-      .json({ status: 200, message: "Success", data: Ad });
+      .json({ status: 200, message: "Success", data: photoData });
 
   } catch (error) {
     console.log(error);

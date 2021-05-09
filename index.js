@@ -35,6 +35,10 @@ const PhotoCompRoute = require("./src/PhotoComp/PhotoCompRoute");
 app.use("/photocomp", PhotoCompRoute);
 
 
+const FrameRoute = require("./src/Frams/FrameRoute");
+app.use("/frames", FrameRoute);
+
+
 app.use((req, res, next) => {
   const error = new Error('Not Found');
   res.status(404)
